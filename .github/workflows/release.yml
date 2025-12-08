@@ -7,10 +7,10 @@ on:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
-
     env:
       BINARY_NAME: hrestore
-
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
