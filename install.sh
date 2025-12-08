@@ -24,8 +24,8 @@ fi
 
 # Move the file to the target directory and set executable permissions
 mkdir -p "$TARGET_DIR"
-mv "$TEMP_FILE" "$TARGET_DIR/hrestore"
-chmod +x "$TARGET_DIR/hrestore"
+sudo mv "$TEMP_FILE" "$TARGET_DIR/hrestore"
+sudo chmod +x "$TARGET_DIR/hrestore"
 rm -f "$TEMP_FILE"
 
 echo "Installation complete. HRestore is now ready to use."
