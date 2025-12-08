@@ -1,0 +1,34 @@
+name: Dart CLI Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+    env:
+      BINARY_NAME: hrestore
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Build native executable
+        run: dart compile exe bin/hrestore.dart -o build/${{ env.BINARY_NAME }}
+
+      - name: Rename binary for release
+        run: mv build/${{ env.BINARY_NAME }} build/${{ env.BINARY_NAME }}_linux_x64
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: build/${{ env.BINARY_NAME }}_linux_x64
