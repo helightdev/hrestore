@@ -34,4 +34,4 @@ jobs:
         run: dart analyze
 
       - name: Compile
-        run: dart compile exe bin/main.dart -o build/temp_cli_app
+        run: dart compile exe bin/hrestore.dart
