@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
@@ -30,7 +30,8 @@ jobs:
         run: mv build/${{ env.BINARY_NAME }} build/${{ env.BINARY_NAME }}_linux_x64
 
       - name: Upload Release Asset
-        uses: actions/upload-artifact@v4
+        uses: softprops/action-gh-release@v2
         with:
-          name: ${{ env.BINARY_NAME }}_linux_x64
-          path: build/${{ env.BINARY_NAME }}_linux_x64
+          files: build/${{ env.BINARY_NAME }}_linux_x64
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

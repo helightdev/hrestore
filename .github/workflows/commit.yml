@@ -1,18 +1,9 @@
-name: Continuous Integration (CI) Build
-
-# This workflow is triggered on:
-# 1. Pushes to any branch (for commits)
-# 2. Pull Request (PR) events targeting the main branch (or any other branch you list)
+name: Build and Analyze
 on:
   push:
     branches:
       - main
-      - develop
-      # Add other development branches here if needed
-  pull_request:
-    branches:
-      - main
-      - develop
+  pull_request: { }
 
 jobs:
   build_check:
@@ -20,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
