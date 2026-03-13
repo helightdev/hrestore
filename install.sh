@@ -10,10 +10,6 @@ if ! command -v wget &> /dev/null; then
     echo "Error: 'wget' is required but not installed." >&2
     exit 1
 fi
-if ! command -v dpkg &> /dev/null; then
-    echo "Error: 'dpkg' is required but not installed." >&2
-    exit 1
-fi
 
 # Download the executable file to a temporary location
 echo "Downloading latest HRestore release..."
