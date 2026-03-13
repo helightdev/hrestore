@@ -19,15 +19,18 @@ Future execute(Logger logger, String key, Map<String, dynamic> data) async {
     (key, value) => MapEntry(key, value.toString()),
   );
   bool isInteractive = data['interactive'] as bool? ?? false;
+  bool isTemplate = data['template'] as bool? ?? false;
   ExecBlock exec = switch (data['exec']) {
     String s => ExecBlock(
       lines: [s],
       isInteractive: isInteractive,
+      isTemplate: isTemplate,
       environment: environment,
     ),
     List<dynamic> l => ExecBlock(
       lines: l.map((e) => e.toString()).toList(),
       isInteractive: isInteractive,
+      isTemplate: isTemplate,
       environment: environment,
     ),
     _ => throw ArgumentError('Invalid exec type for $key'),
@@ -51,11 +54,13 @@ Future execute(Logger logger, String key, Map<String, dynamic> data) async {
 class ExecBlock {
   List<String> lines;
   bool isInteractive;
+  bool isTemplate;
   Map<String, String>? environment;
 
   ExecBlock({
     required this.lines,
     this.isInteractive = false,
+    this.isTemplate = false,
     this.environment,
   });
 
@@ -78,8 +83,16 @@ class ExecBlock {
 
   Future runItem(Logger logger, String item) async {
     bool result = true;
+    var first = true;
     for (final line in lines) {
-      var command = "$line $item";
+      String command = line;
+      if (isTemplate) {
+        command = line.replaceAll("{{item}}", item);
+      } else if (first) {
+        command = "$line $item";
+      }
+      first = false;
+
       if (isInteractive) {
         result = await runCommandInteractive(
           logger,
