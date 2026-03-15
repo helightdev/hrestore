@@ -1,14 +1,28 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:io';
 
 import 'package:hrestore/execution.dart';
 import 'package:hrestore/globals.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:toml/toml.dart';
+import 'package:path/path.dart' as path;
 
 Future main(List<String> arguments) async {
   final logger = Logger();
-  var map = {};
-  for (var file in arguments) {
+  var map = <String, dynamic>{};
+  var orderedArgs = arguments.toList();
+  orderedArgs.sort((a, b) {
+    var ap = priorityByFilename(a);
+    var bp = priorityByFilename(b);
+    if (ap != bp) {
+      return -ap.compareTo(bp);
+    } else {
+      return 0;
+    }
+  });
+
+  for (var file in orderedArgs) {
     final fileMap = TomlDocument.loadSync(file).toMap();
     map.addAll(fileMap);
   }
@@ -31,4 +45,16 @@ Future main(List<String> arguments) async {
     });
   }
   logger.info('All done!');
+}
+
+RegExp fileNamePriorityRegex = RegExp(r'^(\d+)_');
+
+int priorityByFilename(String name) {
+  name = path.basename(name);
+  var match = fileNamePriorityRegex.matchAsPrefix(name);
+  if (match != null) {
+    return int.parse(match.group(1)!);
+  } else {
+    return name.startsWith("_") ? 1 : 0;
+  }
 }

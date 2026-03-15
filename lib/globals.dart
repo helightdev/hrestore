@@ -87,11 +87,12 @@ Future<bool> runCommandInteractive(
   Map<String, String>? environment,
 }) async {
   var commands = shellSplit(command);
+  var firstLine = commands.firstOrNull?.split("\n").firstOrNull ?? '';
   if (commands.isEmpty) {
     logger?.err('Excepted non empty command');
     return false;
   }
-  logger?.detail("Running command '$command' interactively");
+  logger?.detail("Running command '$firstLine' interactively");
   try {
     var process = await Process.start(
       "/bin/bash",
